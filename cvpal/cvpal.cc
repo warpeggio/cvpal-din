@@ -19,12 +19,12 @@
 
 #include "cvpal/dac.h"
 #include "cvpal/midi_handler.h"
-#include "cvpal/usb_handler.h"
+#include "cvpal/usb_handler.h" //WTODO: Remove USB
 
 using namespace cvpal;
 
 Dac dac;
-UsbHandler usb_handler;
+UsbHandler usb_handler; // WTODO: We want to remove all USB stuff. 
 MidiHandler midi_handler;
 
 volatile uint8_t control_clock_tick;
@@ -43,7 +43,7 @@ void Init() {
   
   dac.Init();
   midi_handler.Init();
-  usb_handler.Init(&midi_handler);
+  usb_handler.Init(&midi_handler); // WTODO: Remove usb:: I assume this is where the pins are getting initialized
   
   // 1kHz timer for timing trigger pulses.
   TCCR0A = _BV(WGM01);
@@ -58,7 +58,7 @@ void Init() {
 int main(void) {
   Init();
   while (1) {
-    usb_handler.Poll();
+    usb_handler.Poll(); // WTODO: Looks like the starting point for removing USB and replacing with DIN
     if (midi_handler.needs_refresh()) {
       midi_handler.Render();
       const State& state = midi_handler.state();
