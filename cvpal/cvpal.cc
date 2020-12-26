@@ -16,15 +16,21 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include "avrlib/base.h"
+#include <SoftwareSerial.h>
 
 #include "cvpal/dac.h"
 #include "cvpal/midi_handler.h"
-#include "cvpal/usb_handler.h" //WTODO: Remove USB
+#include "cvpal/din_handler.h"
+
+//#include "cvpal/usb_handler.h" //WTODO: Remove USB
+//#define MIDIRX PA1  // PA1 Arduino, Pin 12 on-chip
+//#define MIDITX PA2  // PA2 Arduino, Pin 11 on-chip
 
 using namespace cvpal;
 
 Dac dac;
-UsbHandler usb_handler; // WTODO: We want to remove all USB stuff. 
+//UsbHandler usb_handler; // WTODO: We want to remove all USB stuff. 
+DinHandler din_handler; 
 MidiHandler midi_handler;
 
 volatile uint8_t control_clock_tick;
@@ -34,6 +40,7 @@ ISR(TIM0_COMPA_vect) {
   ++control_clock_tick;
 }
 
+
 void Init() {
   // Initialize Gate outputs.
   DDRA |= _BV(PA6);  // GATE 1
@@ -42,8 +49,11 @@ void Init() {
   PORTA &= ~_BV(PA3);
   
   dac.Init();
-  midi_handler.Init();
-  usb_handler.Init(&midi_handler); // WTODO: Remove usb:: I assume this is where the pins are getting initialized
+  midi_handler.Init(); // needs_refresh is set to True within this routine
+  //usb_handler.Init(&midi_handler); // WTODO
+  din_handler.Init(&midi_handler); // WTODO
+  //SoftwareSerial midiSerial(MIDIRX, MIDITX);
+  //midiSerial.begin (31250); // MIDI Baud rate
   
   // 1kHz timer for timing trigger pulses.
   TCCR0A = _BV(WGM01);
@@ -58,7 +68,12 @@ void Init() {
 int main(void) {
   Init();
   while (1) {
-    usb_handler.Poll(); // WTODO: Looks like the starting point for removing USB and replacing with DIN
+    // WTODO: This line should get data from SoftwareSerial and 
+    //        pass it to cvpal::UsbHandler::Parse(data, len)
+    //usb_handler.Poll(); 
+    //if (midiSerial.available()) {
+      //midi_handler.Parse(midiSerial.read(), midiSerial.available());
+    //}
     if (midi_handler.needs_refresh()) {
       midi_handler.Render();
       const State& state = midi_handler.state();
