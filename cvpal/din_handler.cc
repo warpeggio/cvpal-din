@@ -29,19 +29,20 @@
 
 namespace cvpal {
 
-#include <SoftwareSerial.h>
-class SoftwareSerial;
+//class SoftwareSerial;
 
 /* static */
 MidiHandler* DinHandler::midi_handler_;
 //SoftwareSerial* midiSerial(1,2);
-SoftwareSerial midiSerial(1,2);
+//SoftwareSerial midiSerial(1,2);
 
 /* static */
 void DinHandler::Init(MidiHandler* midi_handler) {
   midi_handler_ = midi_handler;
+  //SoftwareSerial midiSerial = SoftwareSerial(PA1,PA2);
   //midiSerial(PA1,PA2);
   //midiSerial.begin (31250); // MIDI Baud rate
+  softSerialBegin (31250); // MIDI Baud rate
   //usbDeviceDisconnect();
   //_delay_ms(200);
   //usbDeviceConnect();
@@ -55,9 +56,9 @@ void DinHandler::Poll() {
   //if (usbInterruptIsReady()) {
     // We don't emit anything!
   //}
-  //if (midiSerial.available()) {
-  //  midi_handler.Parse(midiSerial.read(), midiSerial.available());
-  //}
+  if (softSerialAvailable()) {
+    midi_handler.Parse(softSerial.read(), 1);
+  }
 }
 
 }  // namespace cvpal

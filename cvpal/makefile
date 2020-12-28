@@ -14,7 +14,8 @@
 FAMILY         = tiny
 MCU_NAME       = 84
 TARGET         = cvpal
-PACKAGES       = cvpal usbdrv
+PACKAGES       = cvpal SoftwareSerial
+#PACKAGES       = cvpal usbdrv
 
 LFUSE          = de
 HFUSE          = d6

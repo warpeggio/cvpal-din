@@ -16,15 +16,10 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include "avrlib/base.h"
-#include <SoftwareSerial.h>
 
 #include "cvpal/dac.h"
 #include "cvpal/midi_handler.h"
 #include "cvpal/din_handler.h"
-
-//#include "cvpal/usb_handler.h" //WTODO: Remove USB
-//#define MIDIRX PA1  // PA1 Arduino, Pin 12 on-chip
-//#define MIDITX PA2  // PA2 Arduino, Pin 11 on-chip
 
 using namespace cvpal;
 
@@ -52,8 +47,6 @@ void Init() {
   midi_handler.Init(); // needs_refresh is set to True within this routine
   //usb_handler.Init(&midi_handler); // WTODO
   din_handler.Init(&midi_handler); // WTODO
-  //SoftwareSerial midiSerial(MIDIRX, MIDITX);
-  //midiSerial.begin (31250); // MIDI Baud rate
   
   // 1kHz timer for timing trigger pulses.
   TCCR0A = _BV(WGM01);
@@ -74,6 +67,7 @@ int main(void) {
     //if (midiSerial.available()) {
       //midi_handler.Parse(midiSerial.read(), midiSerial.available());
     //}
+    // or SOMETHING like that. --w
     if (midi_handler.needs_refresh()) {
       midi_handler.Render();
       const State& state = midi_handler.state();

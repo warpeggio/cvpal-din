@@ -16,10 +16,12 @@
 #ifndef CVPAL_DIN_HANDLER_H_
 #define CVPAL_DIN_HANDLER_H_
 
-//extern "C" {
-//  #include <SoftwareSerial.h>
-//};
+extern "C" {
+  #include "SoftwareSerial/SoftwareSerial.h"
+};
 //#include <SoftwareSerial.h>
+//#include "include/SoftwareSerial.h"
+//#include "SoftwareSerial/SoftwareSerial.h"
 #include "avrlib/base.h"
 
 // w#: This was a callout to some C code. We don't need
@@ -38,7 +40,6 @@ class DinHandler {
 
 
  public:
-  // w#: I think these are the Constructor and Destructor?
   DinHandler() { }
   ~DinHandler() { }
   
