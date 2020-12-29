@@ -19,32 +19,18 @@
 extern "C" {
   #include "SoftwareSerial/SoftwareSerial.h"
 };
-//#include <SoftwareSerial.h>
-//#include "include/SoftwareSerial.h"
-//#include "SoftwareSerial/SoftwareSerial.h"
 #include "avrlib/base.h"
-
-// w#: This was a callout to some C code. We don't need
-//     the  driver anymore though, so it's removed.
-//extern "C" {
-//  #include "usbdrv/usbdrv.h"
-//};
 
 #include "cvpal/midi_handler.h"
 
 namespace cvpal {
 
-//class SoftwareSerial;
-
 class DinHandler {
-
-
  public:
   DinHandler() { }
   ~DinHandler() { }
   
   static void Init(MidiHandler* midi_handler);
-  //static void Init(MidiHandler* midi_handler,SoftwareSerial* midiSerial);
   static void Poll();
   static void Parse(const uint8_t* data, uint8_t size) {
     midi_handler_->Parse(data, size);
@@ -52,8 +38,6 @@ class DinHandler {
 
  private:
   static MidiHandler* midi_handler_;
-  //static SoftwareSerial *midiSerial;
-  //SoftwareSerial midiSerial;
 
   DISALLOW_COPY_AND_ASSIGN(DinHandler);
 };

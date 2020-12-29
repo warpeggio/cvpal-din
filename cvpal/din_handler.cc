@@ -21,43 +21,32 @@
 #include <avr/wdt.h>
 #include <util/delay.h>
 #include <string.h>
-//#include <SoftwareSerial.h>
-
-//extern "C" {                
-//  #include <SoftwareSerial.h>
-//};                          
 
 namespace cvpal {
 
-//class SoftwareSerial;
-
 /* static */
 MidiHandler* DinHandler::midi_handler_;
-//SoftwareSerial* midiSerial(1,2);
-//SoftwareSerial midiSerial(1,2);
 
 /* static */
 void DinHandler::Init(MidiHandler* midi_handler) {
   midi_handler_ = midi_handler;
-  //SoftwareSerial midiSerial = SoftwareSerial(PA1,PA2);
-  //midiSerial(PA1,PA2);
-  //midiSerial.begin (31250); // MIDI Baud rate
   softSerialBegin (31250); // MIDI Baud rate
-  //usbDeviceDisconnect();
-  //_delay_ms(200);
-  //usbDeviceConnect();
-  //usbInit();
-  sei();
+  sei(); // w#: This is probably important, i don't think SoftwareSerial
+         //     is interacting with any interrupts...
 }
 
 /* static */
 void DinHandler::Poll() {
+  // w#: Polling USB like this would likely return data, which
+  //     in turn would cause a callback to the midi handler with whaever
+  //     data was found.
   //usbPoll();
   //if (usbInterruptIsReady()) {
     // We don't emit anything!
   //}
   if (softSerialAvailable()) {
-    midi_handler.Parse(softSerial.read(), 1);
+   // w#: Doesn't work because softSerial isn't declared in this scope...
+    cvpal::DinHandler::Parse(softSerial.read(), 1);
   }
 }
 
